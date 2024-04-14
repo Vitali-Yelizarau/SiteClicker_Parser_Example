@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SiteClicker_Parser
 {
-    public static class FunctionalClass
+    public static class WebDriverExtensions
     {
         public static async Task ClickElement_ById(IWebDriver driver, string ElementId)
         {

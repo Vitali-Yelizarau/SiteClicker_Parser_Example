@@ -16,39 +16,58 @@ namespace SiteClicker_Parser
 
         private async void StartButton_ClickAsync(object sender, EventArgs e)
         {
-            ChangeAppStateAndButtonName();
-            SettingsStorage.Set_RequestRepeatTime(TimeBox.Text);
-            while (SettingsStorage.IsRunning)
+            _Link_ExceptionCase:
+            try
             {
-                IWebDriver driver = new ChromeDriver();
-                try
+                if (!SettingsStorage.IsRunning)
                 {
-                    driver.Navigate().GoToUrl(SettingsStorage.WEB_ADDRESS);
-                    Thread.Sleep(new Random().Next(SettingsStorage.DELAY, SettingsStorage.MAX_DELAY));
-
-                    foreach (string id in SettingsStorage.IdsList)
+                    Logger.LogInfo("\n");
+                    Logger.LogInfo("**********************************************************************************");
+                    Logger.LogInfo("Task been started");
+                }
+                ChangeAppStateAndButtonName();
+                SettingsStorage.Set_RequestRepeatTime(TimeBox.Text);
+                while (SettingsStorage.IsRunning)
+                {
+                    IWebDriver driver = new ChromeDriver();
+                    try
                     {
-                        await FunctionalClass.ClickElement_ById(driver, id);
+                        driver.Navigate().GoToUrl(SettingsStorage.WEB_ADDRESS);
+                        Thread.Sleep(new Random().Next(SettingsStorage.DELAY, SettingsStorage.MAX_DELAY));
+
+                        foreach (string id in SettingsStorage.IdsList)
+                        {
+                            await WebDriverExtensions.ClickElement_ById(driver, id);
+                        }
+
+                        await WebDriverExtensions.ClickElement_ByCssSelector(driver, SettingsStorage.CSS_SELECTOR);
+                        var classText = await WebDriverExtensions.ClickElement_ByClassName(driver, SettingsStorage.CLASS_NAME);
+
+                        await Task.Run(() => Logger.LogInfo(classText));
+                    }
+                    catch (Exception ex)
+                    {
+                        await Task.Run(() => Logger.LogInfo(ex.ToString()));
+                        await Task.Run(() => Logger.LogInfo(ex.Message));
+                        await Task.Run(() => Logger.LogInfo(ex.InnerException.ToString()));
+                    }
+                    finally
+                    {
+                        driver.Quit();
                     }
 
-                    await FunctionalClass.ClickElement_ByCssSelector(driver, SettingsStorage.CSS_SELECTOR);
-                    var classText = await FunctionalClass.ClickElement_ByClassName(driver, SettingsStorage.CLASS_NAME);
-
-                    await Task.Run(() => Logger.LogInfo(classText));
-                }
-                catch (Exception ex)
-                {
-                    await Task.Run(() => Logger.LogInfo(ex.ToString()));
-                    await Task.Run(() => Logger.LogInfo(ex.Message));
-                    await Task.Run(() => Logger.LogInfo(ex.InnerException.ToString()));
-                }
-                finally
-                {
-                    driver.Quit();
+                    await Task.Delay(SettingsStorage.REQUEST_REPEAT_TIME);
                 }
 
-                await Task.Delay(SettingsStorage.REQUEST_REPEAT_TIME);
+                Logger.LogInfo("Task finished");
             }
+            catch (Exception ex)
+            {
+                await Task.Run(() => Logger.LogInfo(ex.ToString()));
+                await Task.Run(() => Logger.LogInfo(ex.Message));
+                await Task.Run(() => Logger.LogInfo(ex.InnerException.ToString()));
+                goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
+            }            
         }
 
         private void ChangeAppStateAndButtonName()
