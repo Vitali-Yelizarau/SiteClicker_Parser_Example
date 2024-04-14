@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using static SiteClicker_Parser.SettingsStorage;
 
 namespace SiteClicker_Parser
 {
@@ -22,7 +23,7 @@ namespace SiteClicker_Parser
             {
                 string processedArg = arg.Trim().ToLowerInvariant();
 
-                if (processedArg == "-startnow") SettingsStorage.ImmediateStart = true;
+                if (processedArg == "-startnow") ImmediateStart = true;
 
                 if (processedArg.Contains("-delay"))
                 {
@@ -38,8 +39,8 @@ namespace SiteClicker_Parser
                     if (successfulConversion)
                     {
                         Control timeBox = mainForm.Controls.Cast<Control>().FirstOrDefault(x => x.Name == "TimeBox");
-                        SettingsStorage.Set_RequestRepeatTime(delay);
-                        timeBox.Text = (SettingsStorage.REQUEST_REPEAT_TIME / 1000 / 60).ToString();
+                        Set_RequestRepeatTime(delay);
+                        timeBox.Text = (REQUEST_REPEAT_TIME / 1000 / 60).ToString();
                     }
                 }
             }

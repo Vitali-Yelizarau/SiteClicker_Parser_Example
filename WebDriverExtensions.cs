@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using static SiteClicker_Parser.SettingsStorage;
 
 namespace SiteClicker_Parser
 {
@@ -29,7 +30,7 @@ namespace SiteClicker_Parser
         public static void AwaitingCompletion(IWebElement _Action)
         {
             _Action.Click();
-            Thread.Sleep(new Random().Next(SettingsStorage.DELAY, SettingsStorage.MAX_DELAY));
+            Thread.Sleep(new Random().Next(DELAY, MAX_DELAY));
         }
     }
 }

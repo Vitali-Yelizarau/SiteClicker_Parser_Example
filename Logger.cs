@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using static SiteClicker_Parser.SettingsStorage;
 
 namespace SiteClicker_Parser
 {
@@ -7,8 +8,8 @@ namespace SiteClicker_Parser
     {
         public static void LogInfo(string info)
         {
-            LogFileChecker(SettingsStorage.LOG_PATH);
-            using (StreamWriter sw = File.AppendText(SettingsStorage.LOG_PATH))
+            LogFileChecker(LOG_PATH);
+            using (StreamWriter sw = File.AppendText(LOG_PATH))
             {
                 sw.WriteLine(DateTime.Now.ToString() + "    " + info);
             }
@@ -22,7 +23,7 @@ namespace SiteClicker_Parser
             }
 
             FileInfo fileInfo = new FileInfo(logPath);
-            if (fileInfo.Length > SettingsStorage.LOGFILE_MAXSIZE_BYTES)
+            if (fileInfo.Length > LOGFILE_MAXSIZE_BYTES)
             {
                 RenameCurrentAndCreateNewLogFile();
                 File.Create(logPath).Close();
@@ -30,10 +31,10 @@ namespace SiteClicker_Parser
         }
         private static void RenameCurrentAndCreateNewLogFile()
         {
-            var newLogPath = SettingsStorage.LOG_PATH.Substring(0, SettingsStorage.LOG_PATH.LastIndexOf('\\') + 1)
+            var newLogPath = LOG_PATH.Substring(0, LOG_PATH.LastIndexOf('\\') + 1)
                            + DateTime.Now.ToString("_dd.MM.yyyy_HH.mm.ss_")
-                           + SettingsStorage.LOG_PATH.Substring(SettingsStorage.LOG_PATH.LastIndexOf('\\') + 1);
-            File.Move(SettingsStorage.LOG_PATH, newLogPath);
+                           + LOG_PATH.Substring(LOG_PATH.LastIndexOf('\\') + 1);
+            File.Move(LOG_PATH, newLogPath);
         }
     }
 }
