@@ -27,11 +27,13 @@ namespace SiteClicker_Parser
                 }
                 ChangeAppStateAndButtonName();
                 SettingsStorage.Set_RequestRepeatTime(TimeBox.Text);
+                int _IterationNumber = 1;
                 while (SettingsStorage.IsRunning)
                 {
                     IWebDriver driver = new ChromeDriver();
                     try
                     {
+                        Logger.LogInfo("Current iteration number: " + _IterationNumber);
                         driver.Navigate().GoToUrl(SettingsStorage.WEB_ADDRESS);
                         Thread.Sleep(new Random().Next(SettingsStorage.DELAY, SettingsStorage.MAX_DELAY));
 
@@ -54,6 +56,7 @@ namespace SiteClicker_Parser
                     finally
                     {
                         driver.Quit();
+                        _IterationNumber++;
                     }
 
                     await Task.Delay(SettingsStorage.REQUEST_REPEAT_TIME);

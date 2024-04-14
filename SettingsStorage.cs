@@ -11,6 +11,7 @@ namespace SiteClicker_Parser
         public static int MAX_DELAY = 5000;
         public static int REQUEST_REPEAT_TIME = 0;
         public static readonly int DEFAULT_REQUEST_REPEAT_TIME = 3 * 60 * 1000; //3 minutes
+        public static readonly long LOGFILE_MAXSIZE_BYTES = 50 * 1024 * 1024; //50 Mbytes
         public static string WEB_ADDRESS = "https://termine.staedteregion-aachen.de/auslaenderamt/";
         public static readonly string APP_PATH = Assembly.GetExecutingAssembly().Location;
         public static readonly string LOG_PATH = APP_PATH + ".log";

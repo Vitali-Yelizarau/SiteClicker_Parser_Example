@@ -5,7 +5,6 @@ namespace SiteClicker_Parser
 {
     public static class Logger
     {
-        private const long MAXFILESIZE_BYTES = 50 * 1024 * 1024; //50 Mbytes
         public static void LogInfo(string info)
         {
             LogFileChecker(SettingsStorage.LOG_PATH);
@@ -23,7 +22,7 @@ namespace SiteClicker_Parser
             }
 
             FileInfo fileInfo = new FileInfo(logPath);
-            if (fileInfo.Length > MAXFILESIZE_BYTES)
+            if (fileInfo.Length > SettingsStorage.LOGFILE_MAXSIZE_BYTES)
             {
                 RenameCurrentAndCreateNewLogFile();
                 File.Create(logPath).Close();
