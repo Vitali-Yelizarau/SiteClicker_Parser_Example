@@ -85,5 +85,10 @@ namespace SiteClicker_Parser
                 TimeBox.Enabled = true;
             }
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if(SettingsStorage.ImmediateStart) StartButton_ClickAsync(this, EventArgs.Empty);
+        }
     }
 }

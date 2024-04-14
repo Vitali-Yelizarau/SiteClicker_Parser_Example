@@ -6,6 +6,7 @@ namespace SiteClicker_Parser
     public class SettingsStorage
     {
         public static bool IsRunning = false;
+        public static bool ImmediateStart = false;
         public static int DELAY = 2000;
         public static int MAX_DELAY = 5000;
         public static int REQUEST_REPEAT_TIME = 0;

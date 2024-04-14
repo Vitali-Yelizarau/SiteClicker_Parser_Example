@@ -67,8 +67,11 @@
             this.Controls.Add(this.TimeLabel);
             this.Controls.Add(this.TimeBox);
             this.Controls.Add(this.StartButton);
+            this.MaximumSize = new System.Drawing.Size(322, 256);
+            this.MinimumSize = new System.Drawing.Size(322, 256);
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
