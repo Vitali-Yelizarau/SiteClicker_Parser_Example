@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SiteClicker_Parser
@@ -11,12 +12,13 @@ namespace SiteClicker_Parser
         [STAThread]
         static void Main(string[] args)
         {
+            //-StartNow -delay_* <=== implemented startup params, * sign in -delay_ param means some number between 1 and 9
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             MainForm mainForm = new MainForm();
 
-            foreach (string arg in args) 
+            foreach (string arg in args)
             {
                 string processedArg = arg.Trim().ToLowerInvariant();
 
@@ -24,7 +26,7 @@ namespace SiteClicker_Parser
 
                 if (processedArg.Contains("-delay"))
                 {
-                    if (processedArg.Length < 8) 
+                    if (processedArg.Length < 8)
                     {
                         MessageBox.Show("Provide correct value in parameter \"delay\". Shutting down the app...");
                         Environment.Exit(0);
@@ -33,15 +35,11 @@ namespace SiteClicker_Parser
                     int symbolIdx = processedArg.IndexOf("_") + 1;
                     string delay = processedArg.Substring(symbolIdx == -1 ? 0 : symbolIdx);
                     bool successfulConversion = int.TryParse(delay, out _);
-                    foreach (Control item in mainForm.Controls)
-                    {                            
-                        if(item is TextBox && 
-                           item.Name == "TimeBox" && 
-                           successfulConversion)
-                        {
-                            SettingsStorage.Set_RequestRepeatTime(delay);
-                            item.Text = (SettingsStorage.REQUEST_REPEAT_TIME / 1000 / 60).ToString();
-                        }
+                    if (successfulConversion)
+                    {
+                        Control timeBox = mainForm.Controls.Cast<Control>().FirstOrDefault(x => x.Name == "TimeBox");
+                        SettingsStorage.Set_RequestRepeatTime(delay);
+                        timeBox.Text = (SettingsStorage.REQUEST_REPEAT_TIME / 1000 / 60).ToString();
                     }
                 }
             }

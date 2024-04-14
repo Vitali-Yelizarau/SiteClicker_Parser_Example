@@ -16,7 +16,7 @@ namespace SiteClicker_Parser
 
         private async void StartButton_ClickAsync(object sender, EventArgs e)
         {
-            _Link_ExceptionCase:
+        _Link_ExceptionCase:
             try
             {
                 if (!SettingsStorage.IsRunning)
@@ -67,7 +67,7 @@ namespace SiteClicker_Parser
                 await Task.Run(() => Logger.LogInfo(ex.Message));
                 await Task.Run(() => Logger.LogInfo(ex.InnerException.ToString()));
                 goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
-            }            
+            }
         }
 
         private void ChangeAppStateAndButtonName()
@@ -88,7 +88,7 @@ namespace SiteClicker_Parser
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if(SettingsStorage.ImmediateStart) StartButton_ClickAsync(this, EventArgs.Empty);
+            if (SettingsStorage.ImmediateStart) StartButton_ClickAsync(this, EventArgs.Empty);
         }
     }
 }
