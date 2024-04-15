@@ -72,6 +72,7 @@ namespace SiteClicker_Parser
                 await Task.Run(() => LogInfo(ex.ToString()));
                 await Task.Run(() => LogInfo(ex.Message));
                 await Task.Run(() => LogInfo(ex.InnerException.ToString()));
+                IsRunning = false;
                 goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
             }
         }
@@ -86,6 +87,7 @@ namespace SiteClicker_Parser
             }
             else
             {
+                ImmediateStart = false;
                 IsRunning = false;
                 StartButton.Text = "Start";
                 TimeBox.Enabled = true;
