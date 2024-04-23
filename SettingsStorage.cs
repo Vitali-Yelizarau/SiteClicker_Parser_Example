@@ -23,9 +23,8 @@ namespace SiteClicker_Parser
         public static IReadOnlyList<string> IdsList = new List<string>
         {
             "buttonfunktionseinheit-1",
-            "cookie_msg_btn_no",
             "header_concerns_accordion-340",
-            "button-plus-268",
+            "button-plus-264",
             "WeiterButton",
             "OKButton"
         };

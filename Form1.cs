@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SiteClicker_Parser.SettingsStorage;
 using static SiteClicker_Parser.Logger;
+using static SiteClicker_Parser.WebDriverExtensions;
 
 namespace SiteClicker_Parser
 {
@@ -18,50 +19,34 @@ namespace SiteClicker_Parser
 
         private async void StartButton_ClickAsync(object sender, EventArgs e)
         {
-        _Link_ExceptionCase:
+            if(!IsRunning)
+            {
+                LogInfo("\n");
+                LogInfo("**********************************************************************************");
+                LogInfo("Task been started");
+            }
+
+            ChangeAppStateAndButtonName();
+            _Link_ExceptionCase:
             try
             {
-                if (!IsRunning)
-                {
-                    LogInfo("\n");
-                    LogInfo("**********************************************************************************");
-                    LogInfo("Task been started");
-                }
-                ChangeAppStateAndButtonName();
                 Set_RequestRepeatTime(TimeBox.Text);
                 while (IsRunning)
                 {
                     //ChromeOptions options = new ChromeOptions();
                     //options.AddArgument("--headless");
                     IWebDriver driver = new ChromeDriver();
-                    try
-                    {
-                        LogInfo("Current iteration number: " + _IterationNumber);
-                        driver.Navigate().GoToUrl(WEB_ADDRESS);
-                        Thread.Sleep(new Random().Next(DELAY, MAX_DELAY));
 
-                        foreach (string id in IdsList)
-                        {
-                            await WebDriverExtensions.ClickElement_ById(driver, id);
-                        }
+                    driver.Navigate().GoToUrl(WEB_ADDRESS);
+                    Thread.Sleep(new Random().Next(DELAY, MAX_DELAY));
+                    await ClickElement_ById(driver, "cookie_msg_btn_no");
 
-                        await WebDriverExtensions.ClickElement_ByCssSelector(driver, CSS_SELECTOR);
-                        var classText = await WebDriverExtensions.ClickElement_ByClassName(driver, CLASS_NAME);
-
-                        await Task.Run(() => LogInfo(classText));
-                    }
-                    catch (Exception ex)
+                    for (int i = 1; i < 4; i++)
                     {
-                        await Task.Run(() => LogInfo(ex.ToString()));
-                        await Task.Run(() => LogInfo(ex.Message));
-                        await Task.Run(() => LogInfo(ex.InnerException.ToString()));
-                    }
-                    finally
-                    {
-                        driver.Quit();
-                        _IterationNumber++;
+                        await MainLogic_GoingThroughSiteAsync(driver, i);
                     }
 
+                    driver.Quit();
                     await Task.Delay(REQUEST_REPEAT_TIME);
                 }
 
@@ -72,8 +57,54 @@ namespace SiteClicker_Parser
                 await Task.Run(() => LogInfo(ex.ToString()));
                 await Task.Run(() => LogInfo(ex.Message));
                 await Task.Run(() => LogInfo(ex.InnerException.ToString()));
-                IsRunning = false;
                 goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
+            }
+        }
+
+        private async Task MainLogic_GoingThroughSiteAsync(IWebDriver driver, int Iteration_TeamNumber)
+        {
+            try
+            {
+                LogInfo("Current iteration number: " + _IterationNumber);
+                Thread.Sleep(new Random().Next(DELAY, MAX_DELAY));
+
+                foreach (string id in IdsList)
+                {
+                    string idToProcess = id;
+                    if (idToProcess.Contains("plus"))
+                    {
+                        ///EXPLANATION: 264 = TEAM 1 BUTTON, 267 - TEAM 2, 268 - TEAM 3
+                        switch (Iteration_TeamNumber)
+                        {
+                            case 2:
+                                idToProcess = id.Replace("264", "267");
+                                break;
+                            case 3:
+                                idToProcess = id.Replace("264", "268");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    
+                    await ClickElement_ById(driver, idToProcess);
+                }
+
+                await ClickElement_ByCssSelector(driver, CSS_SELECTOR);
+                string info_TerminAvailability = await ClickElement_ByClassName(driver, CLASS_NAME);
+
+                await Task.Run(() => LogInfo("(Team N" + Iteration_TeamNumber + ") " + info_TerminAvailability));
+                driver.Navigate().GoToUrl(WEB_ADDRESS);
+            }
+            catch (Exception ex)
+            {
+                await Task.Run(() => LogInfo(ex.ToString()));
+                await Task.Run(() => LogInfo(ex.Message));
+                await Task.Run(() => LogInfo(ex.InnerException.ToString()));
+            }
+            finally
+            {
+                _IterationNumber++;
             }
         }
 
