@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TelegramMethods.cs" />
     <Compile Include="WebDriverExtensions.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="SettingsStorage.cs" />

@@ -4,9 +4,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SiteClicker_Parser.SettingsStorage;
+using Telegram.Bot;
+using Telegram.Bot.Types;
 using static SiteClicker_Parser.Logger;
+using static SiteClicker_Parser.SettingsStorage;
 using static SiteClicker_Parser.WebDriverExtensions;
+using static SiteClicker_Parser.TelegramMethods;
 
 namespace SiteClicker_Parser
 {
@@ -19,30 +22,31 @@ namespace SiteClicker_Parser
 
         private async void StartButton_ClickAsync(object sender, EventArgs e)
         {
-            if(!IsRunning)
+            if (!IsRunning)
             {
                 LogInfo("\n");
                 LogInfo("**********************************************************************************");
                 LogInfo("Task been started");
-            }
+            }            
+
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             ChromeOptions options = new ChromeOptions();
             IWebDriver driver;
 
             ChangeAppStateAndButtonName();
-            _Link_ExceptionCase:
+        _Link_ExceptionCase:
             try
             {
                 Set_RequestRepeatTime(TimeBox.Text);
                 while (IsRunning)
                 {
-                    if(!IsDebug)
+                    if (!IsDebug)
                     {
                         options.AddArgument("window-position=0,0");
                         options.AddArgument("headless");
                         options.AddArgument("disable-gpu");
                         options.AddArgument("no-sandbox");
-                        options.AddArgument("window-size=640x480");
+                        options.AddArgument("--window-size=640x480");
                         chromeDriverService.HideCommandPromptWindow = true;
                     }
 
@@ -75,7 +79,7 @@ namespace SiteClicker_Parser
             {
                 IsException = false;
                 goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
-            }            
+            }
         }
 
         private async Task MainLogic_GoingThroughSiteAsync(IWebDriver driver, int Iteration_TeamNumber)
@@ -103,15 +107,22 @@ namespace SiteClicker_Parser
                                 break;
                         }
                     }
-                    
+
                     await ClickElement_ById(driver, idToProcess);
                 }
 
                 await ClickElement_ByCssSelector(driver, CSS_SELECTOR);
                 string info_TerminAvailability = await ClickElement_ByClassName(driver, CLASS_NAME);
+                string message = "(Team N" + Iteration_TeamNumber + ") " + info_TerminAvailability;
 
-                await Task.Run(() => LogInfo("(Team N" + Iteration_TeamNumber + ") " + info_TerminAvailability));
-                
+                await Task.Run(() => LogInfo(message));
+
+                if (!message.ToLower().Contains("kein"))
+                {                    
+                    var botClient = new TelegramBotClient(TOKEN);
+                    _ = SendMessageToGroup(botClient, CHAT_ID, message);
+                }
+
                 //Here we go on start page
                 driver.Navigate().GoToUrl(WEB_ADDRESS);
             }

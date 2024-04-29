@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SiteClicker_Parser.SettingsStorage;
 using static SiteClicker_Parser.Logger;
-using static SiteClicker_Parser.WebDriverExtensions;
-using System.Runtime.CompilerServices;
+using static SiteClicker_Parser.SettingsStorage;
 
 namespace SiteClicker_Parser
 {
