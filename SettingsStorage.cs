@@ -5,11 +5,14 @@ namespace SiteClicker_Parser
 {
     public class SettingsStorage
     {
+        public static bool IsDebug = false;
+        public static bool IsException = false;
         public static bool IsRunning = false;
         public static bool ImmediateStart = false;
         public static int DELAY = 2000;
         public static int MAX_DELAY = 5000;
         public static int REQUEST_REPEAT_TIME = 0;
+        public static readonly string DEFAULT_REQUEST_REPEAT_TIME_STRING = "3";
         public static readonly int DEFAULT_REQUEST_REPEAT_TIME = 3 * 60 * 1000; //3 minutes
         public static readonly long LOGFILE_MAXSIZE_BYTES = 50 * 1024 * 1024; //50 Mbytes
         public static int _IterationNumber = 1;

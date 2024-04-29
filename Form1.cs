@@ -25,6 +25,9 @@ namespace SiteClicker_Parser
                 LogInfo("**********************************************************************************");
                 LogInfo("Task been started");
             }
+            var chromeDriverService = ChromeDriverService.CreateDefaultService();
+            ChromeOptions options = new ChromeOptions();
+            IWebDriver driver;
 
             ChangeAppStateAndButtonName();
             _Link_ExceptionCase:
@@ -33,9 +36,17 @@ namespace SiteClicker_Parser
                 Set_RequestRepeatTime(TimeBox.Text);
                 while (IsRunning)
                 {
-                    //ChromeOptions options = new ChromeOptions();
-                    //options.AddArgument("--headless");
-                    IWebDriver driver = new ChromeDriver();
+                    if(!IsDebug)
+                    {
+                        options.AddArgument("window-position=0,0");
+                        options.AddArgument("headless");
+                        options.AddArgument("disable-gpu");
+                        options.AddArgument("no-sandbox");
+                        options.AddArgument("window-size=640x480");
+                        chromeDriverService.HideCommandPromptWindow = true;
+                    }
+
+                    driver = new ChromeDriver(chromeDriverService, options);
 
                     driver.Navigate().GoToUrl(WEB_ADDRESS);
                     Thread.Sleep(new Random().Next(DELAY, MAX_DELAY));
@@ -44,6 +55,7 @@ namespace SiteClicker_Parser
                     for (int i = 1; i < 4; i++)
                     {
                         await MainLogic_GoingThroughSiteAsync(driver, i);
+                        if (!IsRunning) break;
                     }
 
                     driver.Quit();
@@ -57,8 +69,13 @@ namespace SiteClicker_Parser
                 await Task.Run(() => LogInfo(ex.ToString()));
                 await Task.Run(() => LogInfo(ex.Message));
                 await Task.Run(() => LogInfo(ex.InnerException.ToString()));
-                goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
+                IsException = true;
             }
+            if (IsException)
+            {
+                IsException = false;
+                goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
+            }            
         }
 
         private async Task MainLogic_GoingThroughSiteAsync(IWebDriver driver, int Iteration_TeamNumber)
@@ -94,6 +111,8 @@ namespace SiteClicker_Parser
                 string info_TerminAvailability = await ClickElement_ByClassName(driver, CLASS_NAME);
 
                 await Task.Run(() => LogInfo("(Team N" + Iteration_TeamNumber + ") " + info_TerminAvailability));
+                
+                //Here we go on start page
                 driver.Navigate().GoToUrl(WEB_ADDRESS);
             }
             catch (Exception ex)
@@ -110,14 +129,16 @@ namespace SiteClicker_Parser
 
         private void ChangeAppStateAndButtonName()
         {
-            if (!IsRunning)
+            if (StartButton.Text.Contains("Start"))
             {
+                DebugCheckBox.Enabled = false;
                 IsRunning = true;
                 StartButton.Text = "Stop";
                 TimeBox.Enabled = false;
             }
             else
             {
+                DebugCheckBox.Enabled = true;
                 ImmediateStart = false;
                 IsRunning = false;
                 StartButton.Text = "Start";
@@ -128,6 +149,12 @@ namespace SiteClicker_Parser
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (ImmediateStart) StartButton_ClickAsync(this, EventArgs.Empty);
+        }
+
+        private void DebugCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox DebugCheckBox = sender as CheckBox;
+            IsDebug = DebugCheckBox.Checked;
         }
     }
 }
