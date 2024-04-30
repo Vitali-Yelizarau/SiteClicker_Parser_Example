@@ -6,6 +6,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using static SiteClicker_Parser.Logger;
+using static SiteClicker_Parser.SettingsStorage;
 
 namespace SiteClicker_Parser
 {
@@ -65,6 +66,13 @@ namespace SiteClicker_Parser
                 chatId: chatId,
                 text: message
             );
+        }
+
+        public static void SendMessageToTelegram(string message)
+        {
+            TelegramSettings tgSettings = new TelegramSettings(TG_SETTINGS_PATH);
+            var botClient = new TelegramBotClient(tgSettings.API_Token);
+            _ = SendMessageToGroup(botClient, tgSettings.ChatId, message);
         }
     }
 }

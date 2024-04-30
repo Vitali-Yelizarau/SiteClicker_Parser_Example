@@ -2,6 +2,7 @@
 using static SiteClicker_Parser.Logger;
 using static SiteClicker_Parser.WebDriverExtensions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SiteClicker_Parser
 {
@@ -42,10 +43,12 @@ namespace SiteClicker_Parser
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.StartButton = new System.Windows.Forms.Button();
             this.TimeBox = new System.Windows.Forms.TextBox();
             this.TimeLabel = new System.Windows.Forms.Label();
             this.DebugCheckBox = new System.Windows.Forms.CheckBox();
+            this.DebugHint = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // StartButton
@@ -64,6 +67,7 @@ namespace SiteClicker_Parser
             this.TimeBox.Name = "TimeBox";
             this.TimeBox.Size = new System.Drawing.Size(29, 26);
             this.TimeBox.TabIndex = 1;
+            this.TimeBox.Text = "3";
             // 
             // TimeLabel
             // 
@@ -85,6 +89,13 @@ namespace SiteClicker_Parser
             this.DebugCheckBox.UseVisualStyleBackColor = true;
             this.DebugCheckBox.CheckedChanged += new System.EventHandler(this.DebugCheckBox_CheckedChanged);
             // 
+            // DebugHint
+            // 
+            this.DebugHint.AutoPopDelay = 5000;
+            this.DebugHint.InitialDelay = 100;
+            this.DebugHint.IsBalloon = true;
+            this.DebugHint.ReshowDelay = 100;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -94,8 +105,8 @@ namespace SiteClicker_Parser
             this.Controls.Add(this.TimeLabel);
             this.Controls.Add(this.TimeBox);
             this.Controls.Add(this.StartButton);
-            this.MaximumSize = new System.Drawing.Size(500, 256);
-            this.MinimumSize = new System.Drawing.Size(322, 256);
+            this.MaximumSize = new System.Drawing.Size(399, 256);
+            this.MinimumSize = new System.Drawing.Size(399, 256);
             this.Name = "MainForm";
             this.Text = "Mine magic app :3";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -110,6 +121,7 @@ namespace SiteClicker_Parser
         private System.Windows.Forms.TextBox TimeBox;
         private System.Windows.Forms.Label TimeLabel;
         private System.Windows.Forms.CheckBox DebugCheckBox;
+        private System.Windows.Forms.ToolTip DebugHint;
     }
 }
 

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Telegram.Bot;
+using static SiteClicker_Parser.TelegramMessagingProcessor;
 
 namespace SiteClicker_Parser
 {

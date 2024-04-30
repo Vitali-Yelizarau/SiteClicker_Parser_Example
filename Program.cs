@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SiteClicker_Parser.Logger;
 using static SiteClicker_Parser.SettingsStorage;
+using static SiteClicker_Parser.TelegramMessagingProcessor;
 
 namespace SiteClicker_Parser
 {
@@ -13,7 +14,7 @@ namespace SiteClicker_Parser
         /// Главная точка входа для приложения.
         /// </summary>
         [STAThread]
-        static async Task Main(string[] args)
+        static Task Main(string[] args)
         {
         //-StartNow -delay_* <=== implemented startup params, * sign in -delay_ param means some number between 1 and 9
         _Link_ExceptionCase:
@@ -59,9 +60,10 @@ namespace SiteClicker_Parser
             }
             catch (Exception ex)
             {
-                await Task.Run(() => LogInfo(ex.ToString()));
-                await Task.Run(() => LogInfo(ex.Message));
-                await Task.Run(() => LogInfo(ex.InnerException.ToString()));
+                LogInfo(ex.ToString());
+                LogInfo(ex.Message);
+                LogInfo(ex.InnerException.ToString());
+                SendMessageToTelegram(ex.ToString());
                 IsException = true;
                 Form.ActiveForm.Close();
             }
@@ -71,6 +73,7 @@ namespace SiteClicker_Parser
                 goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
             }
 
+            return Task.CompletedTask;
         }
 
         private static void Set_DefaultDelayTimeOnStartup(MainForm mainForm, string delay)

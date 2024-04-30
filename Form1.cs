@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,9 +15,16 @@ namespace SiteClicker_Parser
 {
     public partial class MainForm : Form
     {
+        private readonly ToolTip toolTip;
         public MainForm()
         {
             InitializeComponent();
+
+            Control DebugCheckBox = Controls.Cast<Control>().FirstOrDefault(x => x.Name == "DebugCheckBox");
+            toolTip = new ToolTip();
+
+            toolTip.SetToolTip(DebugCheckBox, "And in this mode all the notifications would be sent to Telegram");
+            Controls.Add(DebugCheckBox);
         }
 
         private async void StartButton_ClickAsync(object sender, EventArgs e)
@@ -117,13 +125,12 @@ namespace SiteClicker_Parser
 
                 await Task.Run(() => LogInfo(message));
 
-                //!message.ToLower().Contains("kein")
-                if (!message.ToLower().Contains("kein"))
+                //IsDebug = true;
+                if (!message.ToLower().Contains("kein") || IsDebug)
                 {
-                    TelegramSettings tgSettings = new TelegramSettings(TG_SETTINGS_PATH);
-                    var botClient = new TelegramBotClient(tgSettings.API_Token);
-                    _ = SendMessageToGroup(botClient, tgSettings.ChatId, message);
+                    SendMessageToTelegram(message);
                 }
+                //IsDebug = false;
 
                 //Here we go to start page
                 driver.Navigate().GoToUrl(WEB_ADDRESS);
@@ -133,6 +140,7 @@ namespace SiteClicker_Parser
                 await Task.Run(() => LogInfo(ex.ToString()));
                 await Task.Run(() => LogInfo(ex.Message));
                 await Task.Run(() => LogInfo(ex.InnerException.ToString()));
+                SendMessageToTelegram(ex.ToString());
             }
             finally
             {
