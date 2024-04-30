@@ -24,7 +24,7 @@ namespace SiteClicker_Parser
         *SendMessageToGroup(botClient, chatId, message).Wait();
     */
 
-    public static class TelegramMethods
+    public static class TelegramMessagingProcessor
     {
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {

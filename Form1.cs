@@ -5,11 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 using static SiteClicker_Parser.Logger;
 using static SiteClicker_Parser.SettingsStorage;
+using static SiteClicker_Parser.TelegramMessagingProcessor;
 using static SiteClicker_Parser.WebDriverExtensions;
-using static SiteClicker_Parser.TelegramMethods;
 
 namespace SiteClicker_Parser
 {
@@ -27,29 +26,30 @@ namespace SiteClicker_Parser
                 LogInfo("\n");
                 LogInfo("**********************************************************************************");
                 LogInfo("Task been started");
-            }            
+            }
 
+            IWebDriver driver;
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             ChromeOptions options = new ChromeOptions();
-            IWebDriver driver;
+
+            if (!IsDebug)
+            {
+                options.AddArgument("window-position=0,0");
+                options.AddArgument("headless");
+                options.AddArgument("disable-gpu");
+                options.AddArgument("no-sandbox");
+                options.AddArgument("--window-size=640x480");
+                chromeDriverService.HideCommandPromptWindow = true;
+            }
 
             ChangeAppStateAndButtonName();
+
         _Link_ExceptionCase:
             try
             {
                 Set_RequestRepeatTime(TimeBox.Text);
                 while (IsRunning)
                 {
-                    if (!IsDebug)
-                    {
-                        options.AddArgument("window-position=0,0");
-                        options.AddArgument("headless");
-                        options.AddArgument("disable-gpu");
-                        options.AddArgument("no-sandbox");
-                        options.AddArgument("--window-size=640x480");
-                        chromeDriverService.HideCommandPromptWindow = true;
-                    }
-
                     driver = new ChromeDriver(chromeDriverService, options);
 
                     driver.Navigate().GoToUrl(WEB_ADDRESS);
@@ -117,13 +117,15 @@ namespace SiteClicker_Parser
 
                 await Task.Run(() => LogInfo(message));
 
+                //!message.ToLower().Contains("kein")
                 if (!message.ToLower().Contains("kein"))
-                {                    
-                    var botClient = new TelegramBotClient(TOKEN);
-                    _ = SendMessageToGroup(botClient, CHAT_ID, message);
+                {
+                    TelegramSettings tgSettings = new TelegramSettings(TG_SETTINGS_PATH);
+                    var botClient = new TelegramBotClient(tgSettings.API_Token);
+                    _ = SendMessageToGroup(botClient, tgSettings.ChatId, message);
                 }
 
-                //Here we go on start page
+                //Here we go to start page
                 driver.Navigate().GoToUrl(WEB_ADDRESS);
             }
             catch (Exception ex)

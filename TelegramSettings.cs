@@ -1,35 +1,29 @@
 ﻿using Newtonsoft.Json;
-using SiteClicker_Parser.Properties;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SiteClicker_Parser.SettingsStorage;
 
 namespace SiteClicker_Parser
 {
     internal class TelegramSettings
     {
-        public TelegramSettings(string pathToSettingsFile) 
+        public TelegramSettings(string pathToSettingsFile)
         {
             if (File.Exists(pathToSettingsFile))
             {
                 string json = File.ReadAllText(pathToSettingsFile);
                 var tempSettings = JsonConvert.DeserializeObject<TelegramSettings>(json);
 
-                TOKEN = API_Token = tempSettings.API_Token;
-                CHAT_ID = ChatId = tempSettings.ChatId;
-
+                API_Token = tempSettings.API_Token;
+                ChatId = tempSettings.ChatId;
             }
             else
             {
-                TOKEN = API_Token = string.Empty;
-                CHAT_ID = ChatId = -1;
+                API_Token = string.Empty;
+                ChatId = -1;
             }
         }
+        [JsonProperty("API_Token")]
         public string API_Token { get; private set; }
+        [JsonProperty("ChatId")]
         public long ChatId { get; private set; }
     }
 }
