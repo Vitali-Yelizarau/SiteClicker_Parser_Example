@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace SiteClicker_Parser
@@ -19,10 +20,14 @@ namespace SiteClicker_Parser
 
         public static string WEB_ADDRESS = "https://termine.staedteregion-aachen.de/auslaenderamt/";
         public static readonly string APP_PATH = Assembly.GetExecutingAssembly().Location;
+        public static readonly string APP_FOLDER_PATH = APP_PATH.Substring(0, APP_PATH.LastIndexOf('\\') + 1);
         public static readonly string LOG_PATH = APP_PATH + ".log";
-        public static readonly string TG_SETTINGS_PATH = APP_PATH.Substring(0, APP_PATH.LastIndexOf('\\') + 1) + "TelegramSettings.json";
+        public static readonly string TG_SETTINGS_PATH = APP_FOLDER_PATH + "TelegramSettings.json";
         public static readonly string CSS_SELECTOR = "input.btn.btn-primary.onehundred.pull-right";
         public static readonly string CLASS_NAME = "h1like";
+
+        public static FileStream lockFile = null;
+        public static readonly string LOCK_FILE_PATH = APP_FOLDER_PATH + "base.dll";
 
         public static IReadOnlyList<string> IdsList = new List<string>
         {

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SiteClicker_Parser.Logger;
@@ -17,7 +19,6 @@ namespace SiteClicker_Parser
         static Task Main(string[] args)
         {
             //-StartNow -delay_* <=== implemented startup params, * sign in -delay_ param means some number between 1 and 9
-
             AppDomain.CurrentDomain.UnhandledException += (sender, arguments) =>
             {
                 string exceptionText = arguments.ExceptionObject?.ToString();
@@ -40,10 +41,15 @@ namespace SiteClicker_Parser
                 arguments.SetObserved();
             };
 
-
-        _Link_ExceptionCase:
+            _Link_ExceptionCase:
             try
             {
+                if (File.Exists(LOCK_FILE_PATH))
+                {
+                    MessageBox.Show("Another instance is already running.");
+                    Environment.Exit(0);
+                }
+
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
@@ -86,6 +92,11 @@ namespace SiteClicker_Parser
                 }
 
                 Application.Run(mainForm);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show("Another instance is already running: " + ex.Message);
+                Environment.Exit(0);
             }
             catch (Exception ex)
             {

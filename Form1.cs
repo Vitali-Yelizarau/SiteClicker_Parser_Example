@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -174,6 +175,7 @@ namespace SiteClicker_Parser
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            lockFile = new FileStream(LOCK_FILE_PATH, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
             if (ImmediateStart) StartButton_ClickAsync(this, EventArgs.Empty);
         }
 
@@ -181,6 +183,16 @@ namespace SiteClicker_Parser
         {
             CheckBox DebugCheckBox = sender as CheckBox;
             IsDebug = DebugCheckBox.Checked;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (lockFile != null && File.Exists(LOCK_FILE_PATH))
+            {
+                lockFile.Close();
+                lockFile = null;
+                File.Delete(LOCK_FILE_PATH);
+            }
         }
     }
 }
