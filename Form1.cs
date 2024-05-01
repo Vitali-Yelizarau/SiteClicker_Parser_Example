@@ -130,12 +130,12 @@ namespace SiteClicker_Parser
                  * 
                  */
 
-                IsDebug = true;
+                //IsDebug = true;
                 if (!message.ToLower().Contains("kein") || IsDebug)
                 {
                     SendMessageToTelegram(message);
                 }
-                IsDebug = false;
+                //IsDebug = false;
 
                 //Here we go to start page
                 driver.Navigate().GoToUrl(WEB_ADDRESS);

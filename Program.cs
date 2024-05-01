@@ -89,7 +89,7 @@ namespace SiteClicker_Parser
                 LogInfo(ex?.InnerException?.ToString());
                 SendMessageToTelegram("Error during the runtime. Check the logs");
                 IsException = true;
-                Form.ActiveForm.Close();
+                Form.ActiveForm?.Close();
             }
             if (IsException)
             {
