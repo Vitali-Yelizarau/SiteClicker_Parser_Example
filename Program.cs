@@ -110,7 +110,7 @@ namespace SiteClicker_Parser
             if (IsException)
             {
                 IsException = false;
-                goto _Link_ExceptionCase; //Why this exception been not processed before - idk (probably loss of internet connection), cause it shall be processed :\
+                goto _Link_ExceptionCase; //just to be sure app runs further :D
             }
 
             return Task.CompletedTask;
