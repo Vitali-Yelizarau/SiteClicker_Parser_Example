@@ -124,10 +124,9 @@ namespace SiteClicker_Parser
 
                 await Task.Run(() => LogInfo(message));
 
-                /*
-                 * 
+                /*                 
                  * DO NOT FORGET TO COMMENT THE MANUAL ASSIGNATION OF VALUE TO VARIABLE IsDebug AFTER TESTS
-                 * 
+                 * THIS MANUAL ASSIGNATION USED TO TEST TELEGRAM NOTIFICATIONS WITHOUT CALLING THE CHROME WINDOW AND TERMINAL WINDOW                 
                  */
 
                 //IsDebug = true;
