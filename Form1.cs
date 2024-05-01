@@ -133,6 +133,7 @@ namespace SiteClicker_Parser
                 //IsDebug = true;
                 if (!message.ToLower().Contains("kein") || IsDebug)
                 {
+                    message = !message.ToLower().Contains("kein") ? message = "There's available time slot(s) for Team N" + Iteration_TeamNumber + ". Go and take it!" : message;
                     SendMessageToTelegram(message);
                 }
                 //IsDebug = false;
