@@ -138,7 +138,7 @@ namespace SiteClicker_Parser
                 }
                 //IsDebug = false;
 
-                //Here we go to start page
+                //Here we go to the start page
                 driver.Navigate().GoToUrl(WEB_ADDRESS);
             }
             catch (Exception ex)

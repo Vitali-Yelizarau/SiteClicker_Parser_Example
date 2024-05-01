@@ -12,9 +12,6 @@ namespace SiteClicker_Parser
 {
     internal static class Program
     {
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
         [STAThread]
         static Task Main(string[] args)
         {
