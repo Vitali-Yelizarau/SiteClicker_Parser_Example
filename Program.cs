@@ -72,6 +72,11 @@ namespace SiteClicker_Parser
                             {
                                 Set_DefaultDelayTimeOnStartup(mainForm, delay);
                             }
+                            else
+                            {
+                                delay = "3";
+                                Set_DefaultDelayTimeOnStartup(mainForm, delay);
+                            }
                         }
                     }
                 }
