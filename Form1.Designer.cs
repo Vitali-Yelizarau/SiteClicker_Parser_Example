@@ -29,9 +29,9 @@ namespace SiteClicker_Parser
             }
             catch (System.Exception ex)
             {
-                Task.Run(() => LogInfo(ex.ToString()));
-                Task.Run(() => LogInfo(ex.Message));
-                Task.Run(() => LogInfo(ex.InnerException.ToString()));
+                Task.Run(() => LogInfo(ex?.ToString()));
+                Task.Run(() => LogInfo(ex?.Message));
+                Task.Run(() => LogInfo(ex?.InnerException?.ToString()));
             }
         }
 

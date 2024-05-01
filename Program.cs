@@ -16,7 +16,31 @@ namespace SiteClicker_Parser
         [STAThread]
         static Task Main(string[] args)
         {
-        //-StartNow -delay_* <=== implemented startup params, * sign in -delay_ param means some number between 1 and 9
+            //-StartNow -delay_* <=== implemented startup params, * sign in -delay_ param means some number between 1 and 9
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, arguments) =>
+            {
+                string exceptionText = arguments.ExceptionObject?.ToString();
+                LogInfo(exceptionText);
+                SendMessageToTelegram("Unhandled exception been catched and handled. Check the logs for more info");
+            };
+
+            Application.ThreadException += (sender, arguments) =>
+            {
+                string exceptionText = arguments.Exception?.ToString();
+                LogInfo(exceptionText);
+                SendMessageToTelegram("Unhandled thread exception been catched and handled. Check the logs for more info");
+            };
+
+            TaskScheduler.UnobservedTaskException += (sender, arguments) =>
+            {
+                string exceptionText = arguments.Exception?.ToString();
+                LogInfo(exceptionText);
+                SendMessageToTelegram("Unobserved task exception been catched and handled. Check the logs for more info");
+                arguments.SetObserved();
+            };
+
+
         _Link_ExceptionCase:
             try
             {
@@ -60,10 +84,10 @@ namespace SiteClicker_Parser
             }
             catch (Exception ex)
             {
-                LogInfo(ex.ToString());
-                LogInfo(ex.Message);
-                LogInfo(ex.InnerException.ToString());
-                SendMessageToTelegram(ex.ToString());
+                LogInfo(ex?.ToString());
+                LogInfo(ex?.Message);
+                LogInfo(ex?.InnerException?.ToString());
+                SendMessageToTelegram("Error during the runtime. Check the logs");
                 IsException = true;
                 Form.ActiveForm.Close();
             }

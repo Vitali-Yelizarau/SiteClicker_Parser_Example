@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Telegram.Bot;
 using static SiteClicker_Parser.Logger;
 using static SiteClicker_Parser.SettingsStorage;
 using static SiteClicker_Parser.TelegramMessagingProcessor;
@@ -78,9 +77,9 @@ namespace SiteClicker_Parser
             }
             catch (Exception ex)
             {
-                await Task.Run(() => LogInfo(ex.ToString()));
-                await Task.Run(() => LogInfo(ex.Message));
-                await Task.Run(() => LogInfo(ex.InnerException.ToString()));
+                await Task.Run(() => LogInfo(ex?.ToString()));
+                await Task.Run(() => LogInfo(ex?.Message));
+                await Task.Run(() => LogInfo(ex?.InnerException?.ToString()));
                 IsException = true;
             }
             if (IsException)
@@ -125,22 +124,28 @@ namespace SiteClicker_Parser
 
                 await Task.Run(() => LogInfo(message));
 
-                //IsDebug = true;
+                /*
+                 * 
+                 * DO NOT FORGET TO COMMENT THE MANUAL ASSIGNATION OF VALUE TO VARIABLE IsDebug AFTER TESTS
+                 * 
+                 */
+
+                IsDebug = true;
                 if (!message.ToLower().Contains("kein") || IsDebug)
                 {
                     SendMessageToTelegram(message);
                 }
-                //IsDebug = false;
+                IsDebug = false;
 
                 //Here we go to start page
                 driver.Navigate().GoToUrl(WEB_ADDRESS);
             }
             catch (Exception ex)
             {
-                await Task.Run(() => LogInfo(ex.ToString()));
-                await Task.Run(() => LogInfo(ex.Message));
-                await Task.Run(() => LogInfo(ex.InnerException.ToString()));
-                SendMessageToTelegram(ex.ToString());
+                await Task.Run(() => LogInfo(ex?.ToString()));
+                await Task.Run(() => LogInfo(ex?.Message));
+                await Task.Run(() => LogInfo(ex?.InnerException?.ToString()));
+                SendMessageToTelegram("Error during the runtime. Check the logs");
             }
             finally
             {
