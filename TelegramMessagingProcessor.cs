@@ -13,11 +13,19 @@ namespace SiteClicker_Parser
 
     /*
      * Method, which been used to get chat id
-     * botClient.StartReceiving
-        (
-            updateHandler: HandleUpdateAsync,
-            pollingErrorHandler: HandleErrorAsync
-        );
+     * 
+     *  //var cts = new CancellationTokenSource();
+        //var receiverOptions = new ReceiverOptions
+        //{
+        //    AllowedUpdates = Array.Empty<UpdateType>()
+        //};
+
+        //botClient.StartReceiving<TelegramUpdateHandler>(
+        //    receiverOptions,
+        //    cancellationToken: cts.Token
+        //);
+
+        //var me = await botClient.GetMe();
 
 
         *
@@ -55,18 +63,25 @@ namespace SiteClicker_Parser
             TelegramSettings tgSettings = new TelegramSettings(TG_SETTINGS_PATH);
             var botClient = new TelegramBotClient(tgSettings.API_Token);
 
-            var cts = new CancellationTokenSource();
-            var receiverOptions = new ReceiverOptions
-            {
-                AllowedUpdates = Array.Empty<UpdateType>()
-            };
 
-            botClient.StartReceiving<TelegramUpdateHandler>(
-                receiverOptions,
-                cancellationToken: cts.Token
-            );
+            /*
+             * This commented part should be enabled only for retreiving of the chat id (works when you'll write something to the group chat, in which your bot was added
+             * DO NOT FORGET TO GRANT TO THE BOT ADMIN RIGHTS IN THAT CHAT
+             */
 
-            var me = await botClient.GetMe();
+            //var cts = new CancellationTokenSource();
+            //var receiverOptions = new ReceiverOptions
+            //{
+            //    AllowedUpdates = Array.Empty<UpdateType>()
+            //};
+
+            //botClient.StartReceiving<TelegramUpdateHandler>(
+            //    receiverOptions,
+            //    cancellationToken: cts.Token
+            //);
+
+            //var me = await botClient.GetMe();
+
             _ = SendMessageToGroup(botClient, tgSettings.ChatId, message);
         }
     }

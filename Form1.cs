@@ -131,7 +131,7 @@ namespace SiteClicker_Parser
                  * THIS MANUAL ASSIGNATION USED TO TEST TELEGRAM NOTIFICATIONS WITHOUT CALLING THE CHROME WINDOW AND TERMINAL WINDOW                 
                  */
 
-                IsDebug = true;
+                //IsDebug = true;
                 if (!message.ToLower().Contains("kein") || IsDebug)
                 {
                     message = !message.ToLower().Contains("kein") ? "There's available time slot(s) for Team N" + Iteration_TeamNumber + ". Go and take it!" : message;
