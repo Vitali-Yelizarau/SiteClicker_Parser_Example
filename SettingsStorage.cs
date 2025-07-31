@@ -33,10 +33,11 @@ namespace SiteClicker_Parser
         public static IReadOnlyList<string> IdsList = new List<string>
         {
             "buttonfunktionseinheit-1",
-            "header_concerns_accordion-340",
-            "button-plus-264",
+            "header_concerns_accordion-1223",
+            "button-plus-351",
             "WeiterButton",
-            "OKButton"
+            "OKButton",
+            "WeiterButton"
         };
 
         public static void Set_RequestRepeatTime(string timeString)

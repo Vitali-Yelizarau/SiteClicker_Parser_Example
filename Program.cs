@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SiteClicker_Parser.Logger;
@@ -20,25 +19,25 @@ namespace SiteClicker_Parser
             {
                 string exceptionText = arguments.ExceptionObject?.ToString();
                 LogInfo(exceptionText);
-                SendMessageToTelegram("Unhandled exception been catched and handled. Check the logs for more info");
+                SendMessageToTelegramAsync("Unhandled exception been catched and handled. Check the logs for more info");
             };
 
             Application.ThreadException += (sender, arguments) =>
             {
                 string exceptionText = arguments.Exception?.ToString();
                 LogInfo(exceptionText);
-                SendMessageToTelegram("Unhandled thread exception been catched and handled. Check the logs for more info");
+                SendMessageToTelegramAsync("Unhandled thread exception been catched and handled. Check the logs for more info");
             };
 
             TaskScheduler.UnobservedTaskException += (sender, arguments) =>
             {
                 string exceptionText = arguments.Exception?.ToString();
                 LogInfo(exceptionText);
-                SendMessageToTelegram("Unobserved task exception been catched and handled. Check the logs for more info");
+                SendMessageToTelegramAsync("Unobserved task exception been catched and handled. Check the logs for more info");
                 arguments.SetObserved();
             };
 
-            _Link_ExceptionCase:
+        _Link_ExceptionCase:
             try
             {
                 if (File.Exists(LOCK_FILE_PATH))
@@ -100,7 +99,7 @@ namespace SiteClicker_Parser
                 LogInfo(ex?.ToString());
                 LogInfo(ex?.Message);
                 LogInfo(ex?.InnerException?.ToString());
-                SendMessageToTelegram("Error during the runtime. Check the logs");
+                SendMessageToTelegramAsync("Error during the runtime. Check the logs");
                 IsException = true;
                 Form.ActiveForm?.Close();
             }

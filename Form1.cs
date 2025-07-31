@@ -36,6 +36,7 @@ namespace SiteClicker_Parser
                 LogInfo("Task been started");
             }
 
+
             IWebDriver driver;
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             ChromeOptions options = new ChromeOptions();
@@ -119,7 +120,7 @@ namespace SiteClicker_Parser
                     await ClickElement_ById(driver, idToProcess);
                 }
 
-                await ClickElement_ByCssSelector(driver, CSS_SELECTOR);
+                //await ClickElement_ByCssSelector(driver, CSS_SELECTOR);
                 string info_TerminAvailability = await ClickElement_ByClassName(driver, CLASS_NAME);
                 string message = "(Team N" + Iteration_TeamNumber + ") " + info_TerminAvailability;
 
@@ -130,11 +131,11 @@ namespace SiteClicker_Parser
                  * THIS MANUAL ASSIGNATION USED TO TEST TELEGRAM NOTIFICATIONS WITHOUT CALLING THE CHROME WINDOW AND TERMINAL WINDOW                 
                  */
 
-                //IsDebug = true;
+                IsDebug = true;
                 if (!message.ToLower().Contains("kein") || IsDebug)
                 {
                     message = !message.ToLower().Contains("kein") ? "There's available time slot(s) for Team N" + Iteration_TeamNumber + ". Go and take it!" : message;
-                    SendMessageToTelegram(message);
+                    await SendMessageToTelegramAsync(message);
                 }
                 //IsDebug = false;
 
@@ -146,7 +147,7 @@ namespace SiteClicker_Parser
                 await Task.Run(() => LogInfo(ex?.ToString()));
                 await Task.Run(() => LogInfo(ex?.Message));
                 await Task.Run(() => LogInfo(ex?.InnerException?.ToString()));
-                SendMessageToTelegram("Error during the runtime. Check the logs");
+                await SendMessageToTelegramAsync("Error during the runtime. Check the logs");
             }
             finally
             {
@@ -186,6 +187,16 @@ namespace SiteClicker_Parser
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Delete_LockFile();
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Delete_LockFile();
+        }
+
+        private void Delete_LockFile()
         {
             if (lockFile != null && File.Exists(LOCK_FILE_PATH))
             {
