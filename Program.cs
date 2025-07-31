@@ -12,28 +12,28 @@ namespace SiteClicker_Parser
     internal static class Program
     {
         [STAThread]
-        static Task Main(string[] args)
+        static async Task Main(string[] args)
         {
             //-StartNow -delay_* <=== implemented startup params, * sign in -delay_ param means some number between 1 and 9
-            AppDomain.CurrentDomain.UnhandledException += (sender, arguments) =>
+            AppDomain.CurrentDomain.UnhandledException += async (sender, arguments) =>
             {
                 string exceptionText = arguments.ExceptionObject?.ToString();
                 LogInfo(exceptionText);
-                SendMessageToTelegramAsync("Unhandled exception been catched and handled. Check the logs for more info");
+                await SendMessageToTelegramAsync("Unhandled exception been catched and handled. Check the logs for more info");
             };
 
-            Application.ThreadException += (sender, arguments) =>
+            Application.ThreadException += async (sender, arguments) =>
             {
                 string exceptionText = arguments.Exception?.ToString();
                 LogInfo(exceptionText);
-                SendMessageToTelegramAsync("Unhandled thread exception been catched and handled. Check the logs for more info");
+                await SendMessageToTelegramAsync("Unhandled thread exception been catched and handled. Check the logs for more info");
             };
 
-            TaskScheduler.UnobservedTaskException += (sender, arguments) =>
+            TaskScheduler.UnobservedTaskException += async (sender, arguments) =>
             {
                 string exceptionText = arguments.Exception?.ToString();
                 LogInfo(exceptionText);
-                SendMessageToTelegramAsync("Unobserved task exception been catched and handled. Check the logs for more info");
+                await SendMessageToTelegramAsync("Unobserved task exception been catched and handled. Check the logs for more info");
                 arguments.SetObserved();
             };
 
@@ -99,7 +99,7 @@ namespace SiteClicker_Parser
                 LogInfo(ex?.ToString());
                 LogInfo(ex?.Message);
                 LogInfo(ex?.InnerException?.ToString());
-                SendMessageToTelegramAsync("Error during the runtime. Check the logs");
+                await SendMessageToTelegramAsync("Error during the runtime. Check the logs");
                 IsException = true;
                 Form.ActiveForm?.Close();
             }
@@ -108,8 +108,6 @@ namespace SiteClicker_Parser
                 IsException = false;
                 goto _Link_ExceptionCase; //just to be sure app runs further :D
             }
-
-            return Task.CompletedTask;
         }
 
         private static void Set_DefaultDelayTimeOnStartup(MainForm mainForm, string delay)

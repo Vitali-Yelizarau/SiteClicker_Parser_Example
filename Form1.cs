@@ -37,7 +37,7 @@ namespace SiteClicker_Parser
             }
 
 
-            IWebDriver driver;
+            IWebDriver driver = null;
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             ChromeOptions options = new ChromeOptions();
 
@@ -59,17 +59,27 @@ namespace SiteClicker_Parser
                 Set_RequestRepeatTime(TimeBox.Text);
                 while (IsRunning)
                 {
+                    if(driver != null)
+                    {
+                        try
+                        {
+                            driver.Quit();
+                            driver = null;
+                        }
+                        catch { }
+                    }
+
                     driver = new ChromeDriver(chromeDriverService, options);
 
                     driver.Navigate().GoToUrl(WEB_ADDRESS);
                     Thread.Sleep(new Random().Next(DELAY, MAX_DELAY));
                     await ClickElement_ById(driver, "cookie_msg_btn_no");
 
-                    for (int i = 1; i < 4; i++)
-                    {
-                        await MainLogic_GoingThroughSiteAsync(driver, i);
+                    //for (int i = 1; i < 4; i++)
+                    //{
+                        await MainLogic_GoingThroughSiteAsync(driver, 1);
                         if (!IsRunning) break;
-                    }
+                    //}
 
                     driver.Quit();
                     await Task.Delay(REQUEST_REPEAT_TIME);
@@ -100,29 +110,11 @@ namespace SiteClicker_Parser
 
                 foreach (string id in IdsList)
                 {
-                    string idToProcess = id;
-                    if (idToProcess.Contains("plus"))
-                    {
-                        ///EXPLANATION: 264 = TEAM 1 BUTTON, 267 - TEAM 2, 268 - TEAM 3
-                        switch (Iteration_TeamNumber)
-                        {
-                            case 2:
-                                idToProcess = id.Replace("264", "267");
-                                break;
-                            case 3:
-                                idToProcess = id.Replace("264", "268");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    await ClickElement_ById(driver, idToProcess);
+                    await ClickElement_ById(driver, id);
                 }
 
-                //await ClickElement_ByCssSelector(driver, CSS_SELECTOR);
                 string info_TerminAvailability = await ClickElement_ByClassName(driver, CLASS_NAME);
-                string message = "(Team N" + Iteration_TeamNumber + ") " + info_TerminAvailability;
+                string message = "(Iteration N" + Iteration_TeamNumber + ") " + info_TerminAvailability;
 
                 await Task.Run(() => LogInfo(message));
 

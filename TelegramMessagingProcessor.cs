@@ -82,7 +82,7 @@ namespace SiteClicker_Parser
 
             //var me = await botClient.GetMe();
 
-            _ = SendMessageToGroup(botClient, tgSettings.ChatId, message);
+            await SendMessageToGroup(botClient, tgSettings.ChatId, message);
         }
     }
 }
