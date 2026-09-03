@@ -126,7 +126,8 @@ namespace SiteClicker_Parser
                 //IsDebug = true;
                 if (!message.ToLower().Contains("kein") || IsDebug)
                 {
-                    message = !message.ToLower().Contains("kein") ? "There's available time slot(s) for Team N" + Iteration_TeamNumber + ". Go and take it!" : message;
+                    //message = !message.ToLower().Contains("kein") ? "There's available time slot(s) for Team N" + Iteration_TeamNumber + ". Go and take it!" : message;
+                    message = !message.ToLower().Contains("kein") ? "There's available time slot(s)! Go and take it!" : message;
                     await SendMessageToTelegramAsync(message);
                 }
                 //IsDebug = false;

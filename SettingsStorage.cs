@@ -33,8 +33,11 @@ namespace SiteClicker_Parser
         public static IReadOnlyList<string> IdsList = new List<string>
         {
             "buttonfunktionseinheit-1",
-            "header_concerns_accordion-1223",
-            "button-plus-351",
+            //"header_concerns_accordion-1223", /*according to the changes on the site,*/
+                                                /*think currently it's possible to book the appointment via infostellle, idk*/
+            //"button-plus-351",
+            "header_concerns_accordion-1228",
+            "button-plus-341",
             "WeiterButton",
             "OKButton",
             "WeiterButton"
